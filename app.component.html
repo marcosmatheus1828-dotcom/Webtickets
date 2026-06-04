@@ -1,0 +1,66 @@
+<ion-app>
+    <ion-header>
+      <ion-toolbar color="dark">
+        <ion-title>LabQueue</ion-title>
+  
+        <ion-buttons slot="end">
+          <ion-button (click)="toggle()">Start/Pause</ion-button>
+          <ion-button (click)="reset()">Reset</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+  
+    <ion-content class="ion-padding">
+  
+      <ng-container *ngIf="state$ | async as state">
+  
+        <h2>Clock: {{ state.clock | number:'1.0-0' }}</h2>
+  
+        <!-- BOTÕES -->
+        <ion-button color="danger" (click)="emit('SP')">SP</ion-button>
+        <ion-button color="primary" (click)="emit('SG')">SG</ion-button>
+        <ion-button color="success" (click)="emit('SE')">SE</ion-button>
+  
+        <!-- FILAS -->
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              SP: {{ state.queues.SP.length }}
+            </ion-col>
+            <ion-col>
+              SG: {{ state.queues.SG.length }}
+            </ion-col>
+            <ion-col>
+              SE: {{ state.queues.SE.length }}
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+  
+        <!-- GUICHÊS -->
+        <ion-card *ngFor="let g of state.guiches">
+          <ion-card-header>
+            Guichê {{ g.id }}
+          </ion-card-header>
+  
+          <ion-card-content>
+            <div *ngIf="g.currentTicket; else free">
+              {{ g.currentTicket.id }}
+            </div>
+  
+            <ng-template #free>
+              Livre
+            </ng-template>
+          </ion-card-content>
+        </ion-card>
+  
+        <!-- PANEL -->
+        <ion-list>
+          <ion-item *ngFor="let t of state.panel">
+            {{ t.id }} - Guichê {{ t.guiche }}
+          </ion-item>
+        </ion-list>
+  
+      </ng-container>
+  
+    </ion-content>
+  </ion-app>
